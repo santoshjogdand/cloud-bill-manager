@@ -1,0 +1,27 @@
+node_modules/
+dist/
+build/
+
+#frontend
+frontend/node_modules/
+frontend/.env
+frontend/build/
+frontend/coverage/
+frontend/public/env-config.js
+frontend/.cache/
+
+# Backend (Node.js)
+backend/node_modules/
+backend/.env
+backend/dist/
+backend/coverage/
+backend/temp/
+backend/uploads/
+backend/.cache/
+
+#IDE 
+.vscode/
+
+# Miscellaneous
+*.lock
+.lock-wscript

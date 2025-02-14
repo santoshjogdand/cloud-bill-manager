@@ -25,3 +25,5 @@ backend/.cache/
 # Miscellaneous
 *.lock
 .lock-wscript
+Cloud_Bill_Manager_Synopsis.pdf
+backend/config/index.html

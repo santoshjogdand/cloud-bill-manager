@@ -40,20 +40,10 @@ const createCustomer = asyncHandler(async(req,res)=>{
 
 })
 
-const getCustomers =asyncHandler(async(req,res)=>{
+const getCustomer =asyncHandler(async(req,res)=>{
     console.log(req.body)
     const orgId = req.org._id
 
-    if(!req.body.customerName){
-
-        console.log(orgId)
-        const customers = await Customer.find({
-                organization: orgId,
-        },"name address email")
-
-        return res.status(200).json(new ApiResponse(201, customers, "All customers!"))
-    }
-    
     const customerName = req.body.customerName
     console.log(customerName)
     const customers = await Customer.find({
@@ -67,4 +57,15 @@ const getCustomers =asyncHandler(async(req,res)=>{
 
 })
 
-export {createCustomer,getCustomers}
+const allCustomers = asyncHandler(async (req,res)=>{
+    const orgId = req.org._id
+    console.log(orgId)
+    const customers = await Customer.find({
+            organization: orgId,
+    },"name address email")
+
+    return res.status(200).json(new ApiResponse(201, customers, "All customers!"))
+    
+})
+
+export {createCustomer,getCustomer,allCustomers}

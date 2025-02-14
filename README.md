@@ -14,18 +14,39 @@ Cloud-Bill Manager is a web-based invoicing and inventory management system desi
 ## **Project Structure**
 ```
 cloud-bill-manager/
-├── backend/                # Backend logic with Express and MongoDB
-│   ├── server.js
-│   ├── routes/
-│   ├── models/
-│   └── package.json
-├── frontend/               # React-based frontend
+├── backend/                  # Backend logic with Express and MongoDB
+│   ├── DB/                   # Database configuration
+│   │   └── database.js
+│   ├── controllers/          # Controllers for handling business logic
+│   │   ├── customer.controller.js
+│   │   ├── organization.controller.js
+│   ├── middlewares/          # Middleware functions
+│   │   ├── auth.middleware.js
+│   │   ├── errorHandler.js
+│   ├── models/               # Mongoose models for MongoDB
+│   │   ├── customer.model.js
+│   │   ├── inventory.model.js
+│   │   ├── invoice.model.js
+│   │   ├── organization.model.js
+│   │   ├── unitofmeasure.model.js
+│   ├── routes/               # API routes
+│   │   ├── organization.routes.js
+│   ├── utils/                # Utility functions
+│   │   ├── ApiError.js
+│   │   ├── ApiResponse.js
+│   │   ├── AsyncHandler.js
+│   ├── app.js                # Express app setup
+│   ├── index.js              # Entry point of the backend
+│   ├── package.json
+│   ├── package-lock.json
+├── frontend/                 # React-based frontend
 │   ├── src/
 │   ├── public/
-│   └── package.json
+│   ├── package.json
 ├── .gitignore
 ├── README.md
 └── package-lock.json
+
 ```
 
 ## **Technologies**

@@ -1,4 +1,4 @@
-import {mongoose, Schema} from "mongoose";
+import { mongoose, Schema} from "mongoose";
 
 const inventorySchema = Schema({
     organization_id: {
@@ -17,21 +17,34 @@ const inventorySchema = Schema({
         type: String,
         trim: true
     },
-    quantity:{
+    stock_quantity:{
         required: true,
         type: Number,
     },
     unitOfMeasure:{
-        required: true,
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "UnitOfMeasure"
+        type: String,
+        trim: true,
+        required: true
+    },                      //kg
+    alternate_unit:{
+        type: String,
+        trim: true          //gm
     },
-    price_per_unit:{
+    sales_price:{
         required : true,
-        type: Number,
+        type: Number, 
+    },                     // sales_price = any
+    alternate_unit_sales_price:{
+        type: Number            // ausp = sales_price / conversion_rate
     },
-    cost_price_per_unit:{
+    cost_price:{
         required : true,
+        type: Number       //Rs.200
+    },
+    alternate_unit_cost:{
+        type: Number        //200/1000 = 0.2 (cost_price / conversion_rate)
+    },
+    conversion_rate:{          // 1(unitOfMeasure) = [conversion_rate](alternate_unit)
         type: Number
     },
     tax_rate:{
@@ -56,36 +69,39 @@ const inventorySchema = Schema({
     reorder_quantity:{  
         type: Number
     },
-    isActive:{
-        type: Boolean,
-        enum: [true, false]
-    },
     description:{
         type: String,
         trim: true
     },
     discount :{
-        type: Number
+        type: Number  // eg: 10%
     },
     total_value:{
-        type: Number
+        type: Number  // = stock_quantity x cost_price 
+    },
+    discounted_price:{
+        type: Number  // = sales_price - discount%
+    },
+    selling_price:{
+        type: Number,
+        required: true // = discounted_price + tax_rate
     },
     createdAt:{
         type: Date,
-        default: Date.now
     },
     modifiedAt:{
         type: Date,
-        default: Date.now
     } 
 
 })
 
-inventorySchema.pre("save",(next)=>{
+inventorySchema.pre("save",async function(next){
     if(this.isModified()){
         this.total_value = this.cost_price_per_unit * this.quantity
-        this.modifiedAt = Date.now
+        this.selling_price = this.price_per_unit - (this.price_per_unit * this.discount/100) 
+        this.modifiedAt = Date.now()
     }
+    next()
 })
 
 

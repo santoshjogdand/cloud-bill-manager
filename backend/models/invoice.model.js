@@ -4,12 +4,11 @@ const lineItemsSchema = Schema({
     sr_no:{
         type: Number
     },
-    product_id:{
-       type: mongoose.Types.Schema.ObjectId,
-       ref: "inventory"
+    product_name:{
+       type: String
     },
-    quantity: {
-        type: Number
+    unitOfMeasure: {
+        type: String
     },
     nos:{
         type: Number
@@ -32,6 +31,9 @@ const invoiceSchema = Schema({
         type: Schema.Types.ObjectId,
         required: true,
         ref: "Customer"
+    },
+    customer_name:{
+        type: String
     },
     invoice_number:{
         type: String,

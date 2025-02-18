@@ -1,20 +1,20 @@
-const mongoose = require('mongoose');
+import { mongoose, Schema } from "mongoose";
 
 const unitOfMeasureSchema = new mongoose.Schema({
-    uomCode: {
+    uom: {
         type: String,
-        required: true,
-        trim: true
+        required: true,//kg
+        trim: true,
+        lowercase: true
     },
     uomName: {
         type: String,
-        required: true,
+        required: true,//kilograms
         trim: true
     },
-    organization_id: {
+    organization: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Organization',
-        required: true
     },
     is_global: {
         type: Boolean,
@@ -36,7 +36,7 @@ const unitOfMeasureSchema = new mongoose.Schema({
 });
 
 // Middleware to update modifiedAt field before saving
-unitOfMeasureSchema.pre('save', function (next) {
+unitOfMeasureSchema.pre('save', async function (next) {
     if (this.isModified()) {
         this.modifiedAt = Date.now();
     }

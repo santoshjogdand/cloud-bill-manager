@@ -12,7 +12,7 @@ const createCustomer = asyncHandler(async(req,res)=>{
         phone,
         address
     } = req.body
-    if(!name || !email || !phone || !address){
+    if(!name?.trim() || !email?.trim() || !phone?.trim() || !address?.trim()){
         throw new ApiError(202, "all fields are required!");
     }
     const organization = req.org._id
@@ -31,7 +31,7 @@ const createCustomer = asyncHandler(async(req,res)=>{
         address,
         organization
     })
-    const cretedCustomer = await Customer.findById(customer._id).select("-email -phone -address")
+    const cretedCustomer = await Customer.findOne({ _id: customer._id, organization: organization }).select("-email -phone -address");
     if(createCustomer){
         return res.status(200).json(new ApiResponse(200,cretedCustomer,"Customer created successfully"))
     }

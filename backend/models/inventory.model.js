@@ -1,7 +1,7 @@
 import { mongoose, Schema} from "mongoose";
 
 const inventorySchema = Schema({
-    organization_id: {
+    organization: {
         required: true,
         type: mongoose.Schema.Types.ObjectId,
         ref: "Organization"
@@ -9,12 +9,14 @@ const inventorySchema = Schema({
     productName:{
         required: true,
         type: String,
+        lowercase: true,
         index: true,
         trim: true
     },
     category:{
         required: true,
         type: String,
+        lowercase: true,
         trim: true
     },
     stock_quantity:{
@@ -76,11 +78,12 @@ const inventorySchema = Schema({
     discount :{
         type: Number  // eg: 10%
     },
-    total_value:{
+    total_stock_value:{
         type: Number  // = stock_quantity x cost_price 
     },
     discounted_price:{
-        type: Number  // = sales_price - discount%
+        type: Number,  // = sales_price - discount%
+        default: 0
     },
     selling_price:{
         type: Number,
@@ -88,6 +91,7 @@ const inventorySchema = Schema({
     },
     createdAt:{
         type: Date,
+        default: Date.now()
     },
     modifiedAt:{
         type: Date,
@@ -97,8 +101,7 @@ const inventorySchema = Schema({
 
 inventorySchema.pre("save",async function(next){
     if(this.isModified()){
-        this.total_value = this.cost_price_per_unit * this.quantity
-        this.selling_price = this.price_per_unit - (this.price_per_unit * this.discount/100) 
+        this.total_stock_value = this.stock_quantity * this.cost_price
         this.modifiedAt = Date.now()
     }
     next()

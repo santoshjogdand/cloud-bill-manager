@@ -64,18 +64,31 @@ cloud-bill-manager/
 - Git
 
 ### **Installation**
-1. Clone the repository:
+
+1. **Clone the repository with submodules:**  
+   If you are cloning for the first time, use:
    ```bash
-   git clone https://github.com/santoshjogdand/cloud-bill-manager.git
+   git clone --recurse-submodules https://github.com/santoshjogdand/cloud-bill-manager.git
    cd cloud-bill-manager
    ```
 
-2. Install dependencies for both **backend** and **frontend**:
+   If you have already cloned the repository but forgot the submodules, run:
+   ```bash
+   git submodule update --init --recursive
+   ```
+
+2. **Install dependencies for both backend and frontend:**
    ```bash
    cd backend
    npm install
    cd ../frontend
    npm install
+   ```
+
+3. **To pull the latest changes including submodules:**
+   ```bash
+   git pull --recurse-submodules
+   git submodule update --remote --merge
    ```
 
 ### **Environment Variables**

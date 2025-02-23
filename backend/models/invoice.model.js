@@ -7,10 +7,13 @@ const lineItemsSchema = Schema({
     product_name:{
        type: String
     },
-    unitOfMeasure: {
+    QTY: {
         type: String
     },
     nos:{
+        type: Number
+    },
+    tax:{
         type: Number
     },
     unit_price:{
@@ -22,7 +25,7 @@ const lineItemsSchema = Schema({
 })
 
 const invoiceSchema = Schema({
-    organization_id: {
+    organization: {
         required: true,
         type: Schema.Types.ObjectId,
         ref: "Organization"
@@ -37,7 +40,8 @@ const invoiceSchema = Schema({
     },
     invoice_number:{
         type: String,
-        required: true
+        required: true,
+        unique: true  
     },
     sub_total: {
         type: Number,

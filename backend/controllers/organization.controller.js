@@ -27,7 +27,6 @@ const register = asyncHandler(async (req, res, next) => {
         password
     } = req.body;
 
-    console.log(req.body)
     if (
         [name, email, phone, ownername, address, category, password].some((field) => typeof field === 'string' && field.trim() === "")
     ) {
@@ -60,7 +59,6 @@ const register = asyncHandler(async (req, res, next) => {
 
     const createOrg = await Organization.findById(organization._id).select("-password -refreshToken ")
     if (createOrg) {
-        console.log("Organization created")
         return res.status(201).json(new ApiResponse(201,createOrg,"Organization created"))
     }
     
@@ -72,8 +70,10 @@ const register = asyncHandler(async (req, res, next) => {
 })
 
 const login = asyncHandler(async (req,res,next)=>{
-    const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-    console.log("IP adress: ",ip)
+    const ip = req.headers['x-forwarded-for']?.split(',')[0] || req.socket.remoteAddress;
+    const formattedIP = ip === "::1" ? "127.0.0.1" : ip;
+    console.log("IP Address:", formattedIP);
+
     const {email, phone, password } = req.body;
     if(!email && !phone){
         throw new ApiError(400, "Email or phone number is required!")
@@ -89,11 +89,8 @@ const login = asyncHandler(async (req,res,next)=>{
     if(!isPasswordCorrect){
         throw new ApiError(401,"Invalid credentials!")
     }
-    console.log("Correct pass")
     const loggedInOrg = await Organization.findById(organization._id).select("-password -refreshToken")
     const accessToken = await loggedInOrg.generateAccessToken()
-    console.log(accessToken)
-    console.log("\n"+options)
     return res.status(200)
     .cookie("accessToken",accessToken,options)
     .json(new ApiResponse(200,loggedInOrg,"Organization logged in successfully!!"))
@@ -103,14 +100,11 @@ const login = asyncHandler(async (req,res,next)=>{
 const logout = asyncHandler(async(req,res,next) =>{
 
     const incomingToken = req.cookies.accessToken
-    console.log(incomingToken)
     const decodedToken = jwt.verify(
         incomingToken,
         process.env.ACCESS_TOKEN_SECRET
     )
-    console.log(decodedToken._id)
     const org = await Organization.findById(decodedToken._id).select("-password")
-    console.log(org)
     return res.status(200).clearCookie("accessToken").json(new ApiResponse(200,{loggedOutBy:org.name},"Oranization logged out!"))
 })
 

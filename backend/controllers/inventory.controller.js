@@ -33,9 +33,6 @@ const addProduct = asyncHandler(async (req,res)=>{
         throw new ApiError(409,"Product already exists with this name")
     }
 
-    console.log(productName,category,stock_quantity,unitOfMeasure,sales_price,cost_price,tax_rate,tax_type)
-    console.log(batch_number,conversion_rate)
-
     if (
         !productName?.trim() || 
         !category?.trim() || 
@@ -48,10 +45,6 @@ const addProduct = asyncHandler(async (req,res)=>{
     ) {
         throw new ApiError(202, "All fields are required! Ensure productName, category, unitOfMeasure, and tax_type are non-empty. Prices must be greater than 0, stock_quantity must be ≥ 0, and tax_rate must be ≥ 0.");
     }
-    console.log("Data received")
-    console.log(batch_number,conversion_rate)
-
-
     if(alternate_unit?.trim() && 
     !(conversion_rate >= 0)){
         throw new ApiError(202,"Conversion rate is required for alternate unit!")
@@ -60,21 +53,14 @@ const addProduct = asyncHandler(async (req,res)=>{
         var alternate_unit_cost = Number(cost_price) / Number(conversion_rate)
         var alternate_unit_sales_price = Number(sales_price) / Number(conversion_rate)
     }
-    console.log("Alternate unit checking done")
-
-
     if(discount > 0){
         var discounted_price = Number(sales_price) - Number((discount/100)*sales_price)
         var selling_price = Number(discounted_price) + Number((tax_rate/100)*discounted_price)
     }else{
         var selling_price = Number(sales_price)
     }
-    console.log("Discout checking done")
-
 
     const total_stock_value = Number(stock_quantity) * Number(cost_price) 
-    console.log("total_stock_value")
-
     const Product = await Inventory.create({
         organization,
         productName,
@@ -93,16 +79,14 @@ const addProduct = asyncHandler(async (req,res)=>{
         reorder_quantity,
         description,
         discount,
+        discounted_price,
         alternate_unit_cost,
         alternate_unit_sales_price,
         selling_price,
         total_stock_value
     });
 
-    console.log("Adding product done")
     const createdProduct = await Inventory.findById(Product?._id).select("productName")
-    console.log("Created Product",createdProduct)
-
     if(createdProduct){
         return res.status(200).json(new ApiResponse(201,createdProduct,"new product created"))
     }
@@ -119,7 +103,23 @@ const getProducts = asyncHandler(async (req,res)=>{
     })
     return res.status(200).json(new ApiResponse(201,Products,"All products"))
 
-})
+});
+
+const findProduct = asyncHandler(async (req,res)=>{
+    const organization = req.org._id;
+    const productToFind = req.body.productName;
+    const fetchedProducts = await Inventory.find({
+        organization,
+        productName:{
+            $regex: productToFind,
+            $options: "i"
+        }
+    });
+    const products = {
+        Products: fetchedProducts
+    }
+    return res.status(200).json(new ApiResponse(201,products,"Products fetched!"));
+});
 
 const addUOM = asyncHandler(async(req,res)=>{
     const {
@@ -168,4 +168,4 @@ const getUOMS = asyncHandler(async (req,res)=>{
     }
 })
 
-export {addUOM, addProduct,getUOMS,getProducts}
+export {addUOM, addProduct,getUOMS,getProducts,findProduct}

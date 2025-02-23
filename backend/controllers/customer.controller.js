@@ -12,7 +12,7 @@ const createCustomer = asyncHandler(async(req,res)=>{
         phone,
         address
     } = req.body
-    if(!name?.trim() || !email?.trim() || !phone?.trim() || !address?.trim()){
+    if(!name?.trim() || !email?.trim() || !phone || !address?.trim()){
         throw new ApiError(202, "all fields are required!");
     }
     const organization = req.org._id
@@ -53,7 +53,10 @@ const getCustomer =asyncHandler(async(req,res)=>{
             $options: 'i'
         }
     },"name")
-    return res.status(200).json(new ApiResponse(201, customers, "Customers fetched!"))
+    const CustomersData = {
+        "Customers" : customers 
+    }
+    return res.status(200).json(new ApiResponse(201, CustomersData, "Customers fetched!"))
 
 })
 

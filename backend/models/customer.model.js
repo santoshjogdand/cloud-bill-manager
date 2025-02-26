@@ -9,7 +9,6 @@ const customerSchema = new Schema({
     email: {
         type: String,
         required: true,
-        unique: true,
         trim: true
     },
     phone: {
@@ -23,8 +22,8 @@ const customerSchema = new Schema({
         trim: true
     },
     organization: {
-        type: mongoose.Schema.Types.ObjectId, // Reference to the Organization
-        ref: 'Organization', // The name of the Organization model
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Organization',
         required: true
     },
     createdAt: {
@@ -34,16 +33,16 @@ const customerSchema = new Schema({
     modifiedAt: {
         type: Date,
         default: Date.now
-
     }
-})
+});
 
-customerSchema.pre("save",async function(next){
-    if(this.isModified()){
-        this.modifiedAt = Date.now()
+customerSchema.index({ email: 1, organization: 1 }, { unique: true });
+
+customerSchema.pre("save", async function(next) {
+    if (this.isModified()) {
+        this.modifiedAt = Date.now();
     }
     next();
-})
-
+});
 
 export const Customer = mongoose.model("Customer", customerSchema);

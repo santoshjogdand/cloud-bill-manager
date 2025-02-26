@@ -6,8 +6,9 @@ import ApiResponse from "../utils/ApiResponse.js";
 
 const options = {
     httpOnly: true,
-    secure: true,
-    sameSite: "none" 
+    secure: false,
+    sameSite: "Lax",
+    expires: new Date(Date.now() + 24 * 60 * 60 * 1000) 
 }
 
 
@@ -36,7 +37,7 @@ const register = asyncHandler(async (req, res, next) => {
     const existedOrganization = await Organization.findOne({
         $or: [{ email }, { phone }, {GSTIN}]
     })
-
+    
     if (existedOrganization) {
         throw new ApiError(409,"The organization already exists with the provided email, phone number, and GSTIN.")
     }
@@ -62,7 +63,7 @@ const register = asyncHandler(async (req, res, next) => {
         return res.status(201).json(new ApiResponse(201,createOrg,"Organization created"))
     }
     
-    if (!createdorganization) {
+    if (!createOrg) {
         throw new ApiError(500, "Something went wrong while registering the organization")
     }
 
@@ -96,6 +97,15 @@ const login = asyncHandler(async (req,res,next)=>{
     .json(new ApiResponse(200,loggedInOrg,"Organization logged in successfully!!"))
     
 })
+const fetchOrganiztionInfo = asyncHandler(async (req,res,next)=>{
+    const orgId = req.org._id;
+    const organization = await Organization.findOne({
+        _id: orgId
+    })
+    const loggedInOrg = await Organization.findById(organization._id).select("-password -refreshToken")
+    return res.status(200).json(new ApiResponse(200,loggedInOrg,"Organization information!"))
+    
+})
 
 const logout = asyncHandler(async(req,res,next) =>{
 
@@ -108,4 +118,8 @@ const logout = asyncHandler(async(req,res,next) =>{
     return res.status(200).clearCookie("accessToken").json(new ApiResponse(200,{loggedOutBy:org.name},"Oranization logged out!"))
 })
 
-export { register, login, logout}
+const checkAuth = asyncHandler(async(req,res)=>{
+    res.status(200).json({ message: "Authenticated" });
+});
+
+export { register, login, logout, checkAuth,fetchOrganiztionInfo}

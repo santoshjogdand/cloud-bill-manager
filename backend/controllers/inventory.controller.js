@@ -43,7 +43,7 @@ const addProduct = asyncHandler(async (req,res)=>{
         tax_rate == null || tax_rate < 0 || 
         !tax_type?.trim()
     ) {
-        throw new ApiError(202, "All fields are required! Ensure productName, category, unitOfMeasure, and tax_type are non-empty. Prices must be greater than 0, stock_quantity must be ≥ 0, and tax_rate must be ≥ 0.");
+        throw new ApiError(400, "All fields are required! Ensure productName, category, unitOfMeasure, and tax_type are non-empty. Prices must be greater than 0, stock_quantity must be ≥ 0, and tax_rate must be ≥ 0.");
     }
     if(alternate_unit?.trim() && 
     !(conversion_rate >= 0)){
@@ -101,7 +101,12 @@ const getProducts = asyncHandler(async (req,res)=>{
     const Products = await Inventory.find({
         organization
     })
-    return res.status(200).json(new ApiResponse(201,Products,"All products"))
+    const totalProducts = Products.length
+    const products = {
+        "Products":Products,
+        "Total_Products": totalProducts 
+    }
+    return res.status(200).json(new ApiResponse(200, products, "All products"));
 
 });
 
@@ -118,7 +123,7 @@ const findProduct = asyncHandler(async (req,res)=>{
     const products = {
         Products: fetchedProducts
     }
-    return res.status(200).json(new ApiResponse(201,products,"Products fetched!"));
+return res.status(200).json(new ApiResponse(200, products, "Products fetched!"));
 });
 
 const addUOM = asyncHandler(async(req,res)=>{
@@ -162,7 +167,7 @@ const getUOMS = asyncHandler(async (req,res)=>{
     const UOMS = await UnitOfMeasure.find({ organization: orgID }).select("uom -_id");
     console.log("++++++++",UOMS)
     if(UOMS){
-        return res.status(200).json(new ApiResponse(201,UOMS,"Unit of measures from inventory"))
+        return res.status(200).json(new ApiResponse(200, UOMS, "Unit of measures from inventory"));
     }else{
         throw new ApiError(501,"UOM not found!")
     }

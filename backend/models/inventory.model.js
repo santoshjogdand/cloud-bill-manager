@@ -107,6 +107,7 @@ inventorySchema.pre("save",async function(next){
     next()
 })
 
+inventorySchema.index({productName: 1,organization: 1},{unique: true})
 
 
 

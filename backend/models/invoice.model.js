@@ -41,7 +41,6 @@ const invoiceSchema = Schema({
     invoice_number:{
         type: String,
         required: true,
-        unique: true  
     },
     sub_total: {
         type: Number,
@@ -69,5 +68,7 @@ const invoiceSchema = Schema({
     },
     line_items: [lineItemsSchema]
 })
+
+invoiceSchema.index({organization: 1, invoice_number:1}, {unique:true})
 
 export const Invoice = mongoose.model("Invoice",invoiceSchema)

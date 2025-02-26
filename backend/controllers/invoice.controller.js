@@ -50,7 +50,7 @@ const createInvoice = asyncHandler(async (req,res)=>{
     } = req.body;
 
     if (!Array.isArray(line_items)) {
-        throw new ApiError(402,"line_items must be an array")
+        throw new ApiError(400,"line_items must be an array");
     }
 
     console.log(req.body)
@@ -83,7 +83,7 @@ const createInvoice = asyncHandler(async (req,res)=>{
         
         isItemDataValid = validateItemsData(item)
         if(!isItemDataValid){
-            throw new ApiError(403,"Item validation error - incorrect data values!")
+            throw new ApiError(400,"Item validation error - incorrect data values!");
         }else{
             sumOfItemPrices_subtotal += Number(item.total_price)
             
@@ -99,8 +99,7 @@ const createInvoice = asyncHandler(async (req,res)=>{
     if(
         ((validateTotal(total_amount,finalTotal) && validateTotal(sub_total,sumOfItemPrices_subtotal) && validateTotal(tax_amount,sumOfItemTax)))
     ){
-
-        throw new ApiError(403,"There is problem encountered in data sent by client, data checks for totals found incorrect data.")
+        throw new ApiError(400,"There is a problem encountered in data sent by client, data checks for totals found incorrect data.");
     }
 
     

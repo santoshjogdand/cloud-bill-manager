@@ -12,15 +12,18 @@ const createCustomer = asyncHandler(async(req,res)=>{
         phone,
         address
     } = req.body
-    if(!name?.trim() || !email?.trim() || !phone || !address?.trim()){
-        throw new ApiError(202, "all fields are required!");
+    if (!name?.trim() || !email?.trim() || !phone || !address?.trim()) {
+        throw new ApiError(400, "All fields are required!");
     }
     const organization = req.org._id
+    console.log(organization)
 
     const existedCustomer = await Customer.findOne({
         organization: req.org._id,
-        $or: [{ email },{ phone }]
-    })
+        $or: [{ email }, { phone }]
+    });
+    console.log("Existing customer found:", existedCustomer);
+
     if(existedCustomer){
         throw new ApiError(409,"Customer already exists with this email or phone number under your organization!")
     }
@@ -54,9 +57,10 @@ const getCustomer =asyncHandler(async(req,res)=>{
         }
     },"name")
     const CustomersData = {
-        "Customers" : customers 
+        "Customers" : customers,
+        "Total_Customers":customers.length
     }
-    return res.status(200).json(new ApiResponse(201, CustomersData, "Customers fetched!"))
+    return res.status(200).json(new ApiResponse(200, CustomersData, "Customers fetched!"));
 
 })
 
@@ -65,9 +69,14 @@ const allCustomers = asyncHandler(async (req,res)=>{
     console.log(orgId)
     const customers = await Customer.find({
             organization: orgId,
-    },"name address email")
+    },"name address email phone")
 
-    return res.status(200).json(new ApiResponse(201, customers, "All customers!"))
+    const AllCustomers = {
+        "Customers":customers,
+        "Total_Customers": customers.length
+    }
+
+    return res.status(200).json(new ApiResponse(200, AllCustomers, "All customers!"));
     
 })
 

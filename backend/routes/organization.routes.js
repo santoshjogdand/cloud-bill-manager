@@ -1,5 +1,5 @@
 import { Router } from "express";
-import {register,login,logout} from "../controllers/organization.controller.js";
+import {register,login,logout,checkAuth,fetchOrganiztionInfo} from "../controllers/organization.controller.js";
 import {allCustomers, createCustomer,getCustomer} from "../controllers/customer.controller.js";
 import { addUOM,addProduct,getUOMS, getProducts ,findProduct} from "../controllers/inventory.controller.js";
 import {createInvoice} from "../controllers/invoice.controller.js"
@@ -13,8 +13,11 @@ router.route("/logout").post(logout)
 
 //secure routes
 //Customer Routes
+router.route("/check-auth").get(verifyJwt,checkAuth);
 router.route("/createCustomer").post(verifyJwt,createCustomer);
 router.route("/Customers").post(verifyJwt,getCustomer).get(verifyJwt,allCustomers);
+
+router.route("/").get(verifyJwt,fetchOrganiztionInfo);
 
 //Inventory routes
 router.route("/addProduct").post(verifyJwt,addProduct)

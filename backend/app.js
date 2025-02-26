@@ -14,14 +14,20 @@ import organization from "./routes/organization.routes.js";
 //middlewares
 import errorHandler from "./middlewares/errorHandler.js"
 
+const allowedOrigins = [
+    "http://127.0.0.1:5500", 
+    "http://localhost:5173", // Add other frontend URLs if needed
+];
 
-
-app.use(cookieParser());
 app.use(cors({
-    origin: '*',  // Allows requests from any origin
-    credentials: true,  // If you need cookies, use 'Access-Control-Allow-Credentials'
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',  // Allow all HTTP methods
-    allowedHeaders: 'Content-Type,Authorization', // Allow these headers
+    origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, origin);
+        } else {
+            callback(new Error("Not allowed by CORS"));
+        }
+    },
+    credentials: true
 }));
 
 app.use("/api/v1/organization",organization)

@@ -18,9 +18,11 @@ import errorHandler from "./middlewares/errorHandler.js"
 
 app.use(cookieParser());
 app.use(cors({
-    origin: 'http://127.0.0.1:5500',  // Replace with your frontend URL
-    credentials: true                 // Allow cookies
-}))
+    origin: '*',  // Allows requests from any origin
+    credentials: true,  // If you need cookies, use 'Access-Control-Allow-Credentials'
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',  // Allow all HTTP methods
+    allowedHeaders: 'Content-Type,Authorization', // Allow these headers
+}));
 
 app.use("/api/v1/organization",organization)
 

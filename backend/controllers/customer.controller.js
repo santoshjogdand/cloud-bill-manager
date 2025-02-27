@@ -71,4 +71,43 @@ const allCustomers = asyncHandler(async (req,res)=>{
     
 })
 
-export {createCustomer,getCustomer,allCustomers}
+const updateCustomer = asyncHandler(async (req, res) => {
+    const organization = req.org._id;
+    const { customerID } = req.params; // Extract from params
+    const { name, email, phone, address } = req.body;
+
+    if (!customerID) {
+        throw new ApiError(400, "Customer ID is required");
+    }
+
+    const updatedCustomer = await Customer.findOneAndUpdate(
+        { _id: customerID, organization },
+        { name, email, phone, address },
+        { new: true, runValidators: true }
+    );
+
+    if (!updatedCustomer) {
+        throw new ApiError(404, "Customer not found");
+    }
+
+    return res.status(200).json(new ApiResponse(200, updatedCustomer, "Customer record updated successfully"));
+});
+
+const removeCustomer = asyncHandler(async (req, res) => {
+    const organization = req.org._id;
+    const { customerID } = req.params; // Extract from params
+
+    if (!customerID) {
+        throw new ApiError(400, "Customer ID is required");
+    }
+
+    const removedCustomer = await Customer.findOneAndDelete({ _id: customerID, organization });
+
+    if (!removedCustomer) {
+        throw new ApiError(404, "Customer not found");
+    }
+
+    return res.status(200).json(new ApiResponse(200, removedCustomer, "Customer record removed successfully"));
+});
+
+export {createCustomer,getCustomer,allCustomers,updateCustomer,removeCustomer}

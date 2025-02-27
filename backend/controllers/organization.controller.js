@@ -4,6 +4,10 @@ import { asyncHandler } from "../utils/AsyncHandler.js";
 import ApiError from "../utils/ApiError.js"
 import ApiResponse from "../utils/ApiResponse.js";
 import nodemailer from "nodemailer"
+import dotenv from "dotenv";
+dotenv.config();
+
+
 
 const options = {
     httpOnly: true,
@@ -119,9 +123,64 @@ const transporter = nodemailer.createTransport({
         pass: process.env.EMAIL_PASS
     }
 });
+
+const getOtpEmailTemplate = (otp) => {
+    return `
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Password Reset OTP</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f4f4f4;
+                padding: 20px;
+                text-align: center;
+            }
+            .email-container {
+                max-width: 500px;
+                margin: auto;
+                background: #fff;
+                padding: 20px;
+                border-radius: 8px;
+                box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+            }
+            .otp-code {
+                font-size: 22px;
+                font-weight: bold;
+                color: #333;
+                background: #f1f1f1;
+                padding: 10px;
+                display: inline-block;
+                border-radius: 5px;
+                margin: 15px 0;
+            }
+            .footer {
+                margin-top: 20px;
+                font-size: 12px;
+                color: #777;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="email-container">
+            <h2>CloudBill Manager</h2>
+            <p>You requested a password reset. Use the OTP below to reset your password:</p>
+            <div class="otp-code">${otp}</div>
+            <p>This OTP is valid for 5 minutes. Do not share it with anyone.</p>
+            <div class="footer">If you didn't request this, you can ignore this email.</div>
+        </div>
+    </body>
+    </html>
+    `;
+};
+
 // 📌 Step 1: Send OTP to Email
 const sendOTP = asyncHandler(async (req, res) => {
     const { email } = req.body;
+    console.log(process.env.EMAIL_USER)
 
     // 🔍 Check if organization exists
     const org = await Organization.findOne({ email });
@@ -135,11 +194,11 @@ const sendOTP = asyncHandler(async (req, res) => {
 
     // ✉️ Send OTP via Email
     await transporter.sendMail({
-        from: process.env.EMAIL_USER,
+        from: `"CloudBill Manager" <${process.env.EMAIL_USER}>`,
         to: email,
         subject: "Cloud bill manager password Reset OTP",
-        text: `Your OTP for password reset is: ${otp}`,
-    });
+        html: getOtpEmailTemplate(otp),
+    }); 
 
     res.status(200).json({ message: "OTP sent to email!" });
 });
@@ -155,7 +214,7 @@ const sendOTP = asyncHandler(async (req, res) => {
     }
 
     // 🔑 Generate JWT Token (valid for 10 mins)
-    const token = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: "10m" });
+    const token = jwt.sign({ email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "10m" });
 
     res.status(200).json({ message: "OTP verified!", token });
 });
@@ -166,7 +225,7 @@ const resetPassword = asyncHandler(async (req, res) => {
 
     try {
         // 🔑 Verify JWT Token
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
         const org = await Organization.findOne({ email: decoded.email });
 
         if (!org) throw new ApiError(400, "Token is required or organization does not exists");

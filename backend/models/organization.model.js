@@ -145,6 +145,12 @@ const organizationSchema = new Schema(
             type: String,
             required: [true, "Password is required"]
         },
+        otp:{
+            type: String
+        },
+        otpExpires:{
+            type: Date
+        },
         refreshToken:{
             type: String
         },

@@ -79,13 +79,13 @@ const login = asyncHandler(async (req,res,next)=>{
     const formattedIP = ip === "::1" ? "127.0.0.1" : ip;
     console.log("IP Address:", formattedIP);
 
-    const {email, phone, password } = req.body;
+    const {email, password } = req.body;
     if(!email && !phone){
         throw new ApiError(400, "Email or phone number is required!")
     }
 
     const organization = await Organization.findOne({
-        $or: [{email},{phone}]
+        email
     })
     if(!organization){
         throw new ApiError(404,"Email or phone number is not associated with organization!")

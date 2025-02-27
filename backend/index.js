@@ -48,8 +48,8 @@ connectDB().then(()=>{
             </html>
         `);
     });
-    app.listen(80 || process.env.PORT,()=>{
-        console.log(`App is listening on port ${80 || process.env.PORT}`)
+    app.listen(process.env.PORT,()=>{
+        console.log(`App is listening on port ${process.env.PORT}`)
     })
 }).catch((err)=>{
     console.log("Error while connecting DB",err)

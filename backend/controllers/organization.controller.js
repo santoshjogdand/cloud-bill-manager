@@ -212,17 +212,76 @@ const sendOTP = asyncHandler(async (req, res) => {
         throw new ApiError(404,"Invalid or expired OTP!")
     }
 
-    // 🔑 Generate JWT Token (valid for 10 mins)
-    const token = jwt.sign({ email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "10m" });
+    // 🔑 Generate JWT Token (valid for 5 mins)
+    const token = jwt.sign({ email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "5m" });
 
-    res.status(200).json({ message: "OTP verified!", token });
+    const otpOptions = {
+        httpOnly: true,    // Prevent JavaScript access
+        secure: false,      // http can also work
+        sameSite: "none",// allows any site
+        maxAge: 5 * 60 * 1000 // 5 minutes
+    }
+
+    res.status(200).cookie("otpAuthToken",token,otpOptions).json({"message":"Otp verified successfully"})
 });
+
+const getPasswordChangeTemplate = (name,ip) =>{
+    return `
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Password Reset Successful</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f4f4f4;
+                padding: 20px;
+                text-align: center;
+            }
+            .email-container {
+                max-width: 500px;
+                margin: auto;
+                background: #fff;
+                padding: 20px;
+                border-radius: 8px;
+                box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+            }
+            .success-message {
+                font-size: 18px;
+                font-weight: bold;
+                color: #2ecc71;
+                margin: 15px 0;
+            }
+            .footer {
+                margin-top: 20px;
+                font-size: 12px;
+                color: #777;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="email-container">
+            <h2>CloudBill Manager</h2>
+            <h3>Hey ${name}</h3>
+            <p class="success-message">Your password has been successfully reset!</p>
+            <p>By device on IP: ${ip}.</p>
+            <p>If you didn’t reset your password, please contact our support team immediately.</p>
+            <div class="footer">Thank you for using CloudBill Manager.</div>
+        </div>
+    </body>
+    </html>
+`;
+
+}
 
 // 📌 Step 3: Reset Password
 const resetPassword = asyncHandler(async (req, res) => {
-    const { token, newPassword } = req.body;
+    const ip = req.headers['x-forwarded-for']?.split(',')[0] || req.socket.remoteAddress;
+    const { newPassword } = req.body;
+    const token  = req.cookies.otpAuthToken
 
-    try {
         // 🔑 Verify JWT Token
         const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
         const org = await Organization.findOne({ email: decoded.email });
@@ -234,11 +293,13 @@ const resetPassword = asyncHandler(async (req, res) => {
         org.otp = undefined; // Clear OTP
         org.otpExpires = undefined;
         await org.save();
-
-        res.status(200).json({ message: "Password reset successful!" });
-    } catch (error) {
-        throw new ApiError(400,"Invalid or expired token!")
-    }
+        await transporter.sendMail({
+            from: `"CloudBill Manager" <${process.env.EMAIL_USER}>`,
+            to: org.email,
+            subject: "Cloud bill manager password change successfull",
+            html: getPasswordChangeTemplate(org.name,ip ),
+        }); 
+        return res.status(200).clearCookie("otpAuthToken").json({ message: "Password reset successful!" });
 });
 
 export { register, login, logout,sendOTP,verifyOTP,resetPassword}

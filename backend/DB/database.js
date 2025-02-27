@@ -6,7 +6,7 @@ const connectDB= async()=>{
         console.log("DB Connection Successful",connectionInstance.connection.host)
 
     }catch(err){
-        console.log("ERR in db connection: ",err)      
+        console.log("ERR in db connection: ",err) 
     }
 }
 

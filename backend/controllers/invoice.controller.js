@@ -149,4 +149,31 @@ const removeInvoice = asyncHandler(async (req, res) => {
     res.status(200).json(new ApiResponse(200, {}, "Invoice removed successfully!"));
 });
 
-export { createInvoice, removeInvoice };
+// 📌 Get all invoices for the organization
+const getAllInvoice = asyncHandler(async (req, res) => {
+    const organization = req.org._id;
+
+    const invoices = await Invoice.find({ organization }).sort({ createdAt: -1 });
+
+    if (!invoices.length) {
+        throw new ApiError(404, "No invoices found!");
+    }
+
+    res.status(200).json(new ApiResponse(200, invoices, "Invoices retrieved successfully"));
+});
+
+// 📌 Get a specific invoice by invoice number
+const getInvoice = asyncHandler(async (req, res) => {
+    const organization = req.org._id;
+    const { invoice_number } = req.body;
+
+    const invoice = await Invoice.findOne({ organization, invoice_number });
+
+    if (!invoice) {
+        throw new ApiError(404, "Invoice not found!");
+    }
+
+    res.status(200).json(new ApiResponse(200, invoice, "Invoice retrieved successfully"));
+});
+
+export { createInvoice, removeInvoice ,getAllInvoice, getInvoice};

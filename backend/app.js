@@ -18,9 +18,14 @@ import errorHandler from "./middlewares/errorHandler.js"
 
 app.use(cookieParser());
 app.use(cors({
-    origin: 'http://127.0.0.1:5500',  // Replace with your frontend URL
-    credentials: true                 // Allow cookies
-}))
+    origin: (origin, callback) => {
+        if (!origin) return callback(null, true); // Allow requests from Postman or mobile apps
+        return callback(null, origin); // Allow all origins dynamically
+    },
+    credentials: true, // Allow cookies
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"]
+}));
 
 app.use("/api/v1/organization",organization)
 

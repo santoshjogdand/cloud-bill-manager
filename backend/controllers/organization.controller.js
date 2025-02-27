@@ -11,7 +11,7 @@ dotenv.config();
 
 const options = {
     httpOnly: true,
-    secure: true,
+    secure: false,
     sameSite: "none" 
 }
 

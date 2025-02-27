@@ -167,7 +167,7 @@ const getInvoice = asyncHandler(async (req, res) => {
     const organization = req.org._id;
     const { invoice_number } = req.body;
 
-    const invoice = await Invoice.findOne({ organization, invoice_number });
+    const invoice = await Invoice.find({ organization, invoice_number });
 
     if (!invoice) {
         throw new ApiError(404, "Invoice not found!");

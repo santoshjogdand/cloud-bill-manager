@@ -2,7 +2,7 @@ import { Router } from "express";
 import { register, login, logout,sendOTP,verifyOTP,resetPassword} from "../controllers/organization.controller.js";
 import {createCustomer,getCustomer,allCustomers,updateCustomer,removeCustomer} from "../controllers/customer.controller.js";
 import { addUOM, addProduct, getUOMS, getProducts, findProduct,updateProduct,removeProduct }from "../controllers/inventory.controller.js";
-import {createInvoice,removeInvoice} from "../controllers/invoice.controller.js"
+import {createInvoice,removeInvoice, getAllInvoice, getInvoice} from "../controllers/invoice.controller.js"
 import verifyJwt from "../middlewares/auth.middleware.js";
 
 const router = Router()
@@ -37,7 +37,7 @@ router.route("/getUOMS").get(verifyJwt,getUOMS)
 
 //Invoice routes
 router.route("/createInvoice").post(verifyJwt,createInvoice);
-router.route("/getInvoices/")
+router.route("/getInvoices")
     .get(verifyJwt, getAllInvoice)
     .post(verifyJwt, getInvoice);
 router.route("/removeinvoice/:invoice_id").delete(verifyJwt,removeInvoice);

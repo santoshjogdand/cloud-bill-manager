@@ -37,6 +37,9 @@ router.route("/getUOMS").get(verifyJwt,getUOMS)
 
 //Invoice routes
 router.route("/createInvoice").post(verifyJwt,createInvoice);
+router.route("/getInvoices/")
+    .get(verifyJwt, getAllInvoice)
+    .post(verifyJwt, getInvoice);
 router.route("/removeinvoice/:invoice_id").delete(verifyJwt,removeInvoice);
 
 export default router

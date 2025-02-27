@@ -180,7 +180,6 @@ const getOtpEmailTemplate = (otp) => {
 // 📌 Step 1: Send OTP to Email
 const sendOTP = asyncHandler(async (req, res) => {
     const { email } = req.body;
-    console.log(process.env.EMAIL_USER)
 
     // 🔍 Check if organization exists
     const org = await Organization.findOne({ email });

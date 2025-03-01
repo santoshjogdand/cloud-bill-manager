@@ -11,7 +11,7 @@ dotenv.config();
 
 const options = {
     httpOnly: true,
-    secure: false,
+    secure: true,
     sameSite: "none" 
 }
 
@@ -94,9 +94,10 @@ const login = asyncHandler(async (req,res,next)=>{
     if(!isPasswordCorrect){
         throw new ApiError(401,"Invalid credentials!")
     }
-    const loggedInOrg = await Organization.findById(organization._id).select("-password -refreshToken")
+    const loggedInOrg = await Organization.findById(organization._id).select("-createdAt -password -updatedAt -__v ")
     const accessToken = await loggedInOrg.generateAccessToken()
     return res.status(200)
+    .clearCookie("accessToken")
     .cookie("accessToken",accessToken,options)
     .json(new ApiResponse(200,loggedInOrg,"Organization logged in successfully!!"))
     

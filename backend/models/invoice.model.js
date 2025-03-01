@@ -67,7 +67,11 @@ const invoiceSchema = Schema({
         type: String,
         enum: ["Paid", "Pending", "Cancelled"]
     },
-    line_items: [lineItemsSchema]
+    line_items: [lineItemsSchema],
+    createdAt: {
+        type: Date,
+        default: Date.now
+    },
 })
 
 export const Invoice = mongoose.model("Invoice",invoiceSchema)

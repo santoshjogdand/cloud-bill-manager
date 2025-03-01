@@ -6,21 +6,21 @@ import { asyncHandler } from "../utils/AsyncHandler.js"
 
 const createCustomer = asyncHandler(async(req,res)=>{
     console.log(req.body)
-    const {
-        name,
-        email,
-        phone,
-        address
-    } = req.body
-    if(!name?.trim() || !email?.trim() || !phone || !address?.trim()){
-        throw new ApiError(202, "all fields are required!");
-    }
-    const organization = req.org._id
+    const { name, email, phone, address } = req.body;
 
+    if (!name || !name.trim() || 
+        !email || !email.trim() || 
+        !phone || !phone.toString().trim() || 
+        !address || !address.trim()) {
+        throw new ApiError(202, "All fields are required!");
+    }
+    
+    const organization = req.org._id
     const existedCustomer = await Customer.findOne({
         organization: req.org._id,
         $or: [{ email },{ phone }]
     })
+
     if(existedCustomer){
         throw new ApiError(409,"Customer already exists with this email or phone number under your organization!")
     }
@@ -52,7 +52,7 @@ const getCustomer =asyncHandler(async(req,res)=>{
             $regex: customerName,
             $options: 'i'
         }
-    },"name")
+    },"name address email phone")
     const CustomersData = {
         "Customers" : customers 
     }
@@ -65,7 +65,7 @@ const allCustomers = asyncHandler(async (req,res)=>{
     console.log(orgId)
     const customers = await Customer.find({
             organization: orgId,
-    },"name address email")
+    },"name address email phone")
 
     return res.status(200).json(new ApiResponse(201, customers, "All customers!"))
     

@@ -29,6 +29,7 @@ const addProduct = asyncHandler(async (req, res) => {
         productName,
         organization
     })
+    console.log(existingProduct)
     if (existingProduct) {
         throw new ApiError(409, "Product already exists with this name")
     }

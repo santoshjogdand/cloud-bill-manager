@@ -109,6 +109,7 @@ const getProducts = asyncHandler(async (req, res) => {
 const findProduct = asyncHandler(async (req, res) => {
     const organization = req.org._id;
     const productToFind = req.body.productName;
+    console.log(productToFind)
     const fetchedProducts = await Inventory.find({
         organization,
         productName: {

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { FiMenu, FiX } from "react-icons/fi"; // Hamburger & Close icons
 
 const Header = () => {
-  const [isOpen, setIsOpen] = useState(true); // Sidebar is open by default
+  const [isOpen, setIsOpen] = useState(false); // Sidebar is open by default
 
   return (
     <>

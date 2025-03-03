@@ -7,19 +7,19 @@ import { AlertCircle, Search, Plus } from "lucide-react";
 const initialProductState = {
   productName: "",
   category: "",
-  stock_quantity: "",
+  stock_quantity: 0.00,
   unitOfMeasure: "",
-  conversion_rate: "",
+  conversion_rate: 0.00,
   alternate_unit: "",
-  tax_rate: "",
+  tax_rate: 0.00,
   tax_type: "",
   supplier: "",
   batch_number: "",
   manufacturer: "",
   description: "",
-  cost_price: "",
-  sales_price: "",
-  discount: "",
+  cost_price: 0.00,
+  sales_price: 0.00,
+  discount: 0.00,
   reorder_quantity: "",
 };
 
@@ -283,6 +283,9 @@ const Inventory = () => {
         {/* Products table */}
         {!loading && (
           <div className="overflow-x-auto rounded-lg shadow">
+            <div className="text-sm text-gray-500 py-2 px-2">
+            Showing {filteredProducts.length} of {products.length} invoices
+          </div>
             <table className="w-full border-collapse bg-white">
               <thead>
                 <tr className="bg-blue-600 text-white text-lg">
@@ -464,7 +467,7 @@ const Inventory = () => {
                       <input 
                         type="number" 
                         name="tax_rate" 
-                        value={productForm.tax_rate} 
+                        value={parseFloat(productForm.tax_rate)} 
                         onChange={handleInputChange} 
                         min="0"
                         step="0.01"

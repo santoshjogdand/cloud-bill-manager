@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Header from '../Header/Header';
+import logoIcon from "../../assets/1.png"
 
 const About = () => {
   const [isHeaderOpen, setIsHeaderOpen] = useState(false);
@@ -26,7 +27,7 @@ const About = () => {
         <div className="bg-white w-full max-w-2xl rounded-lg shadow-md p-6 border border-gray-300 overflow-auto max-h-[80vh] sm:max-h-[90vh]">
           {/* Logo & Title */}
           <div className="flex flex-col items-center mb-4">
-            <img src="../src/assets/1.png" alt="logo" className="w-16 h-16 md:w-20 md:h-20 mb-2" />
+            <img src={logoIcon} alt="logo" className="w-16 h-16 md:w-20 md:h-20 mb-2" />
             {orgName && <h1 className="text-xl md:text-2xl font-bold text-gray-800 text-center">{orgName}</h1>}
             {orgDescription && <p className="text-gray-600 text-center mt-1 text-sm md:text-base">{orgDescription}</p>}
           </div>

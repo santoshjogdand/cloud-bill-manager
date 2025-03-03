@@ -1,100 +1,90 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { API } from "../../Api";
+import SignupModal from "../Signup/Signup"; // Adjusted import path
+import Cookies from "js-cookie";
+
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(""); // Store error message
+  const [error, setError] = useState("");
+  const [showSignupModal, setShowSignupModal] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
-    e.preventDefault(); // ✅ Prevent default form refresh
+    e.preventDefault();
 
     try {
-      console.log("Submitting login request..."); // ✅ Debugging log
-
-      // 🔹 Send login request
       const response = await API.post("login", { email, password });
-
-      console.log("Response status:", response.status); // ✅ Debugging log
-
-      if (response.status === 200) {
-        // ✅ Store authentication status
-        localStorage.setItem("authenticated", "true");
-        const data = response.data.data
-        console.log(data)
-              // ✅ Store organization details in localStorage
-      localStorage.setItem("orgId", data._id);
-      localStorage.setItem("orgName", data.name);
-      localStorage.setItem("orgEmail", data.email);
-      localStorage.setItem("orgPhone", JSON.stringify(data.phone)); // Convert array to string
-      localStorage.setItem("ownerName", data.ownername);
-      localStorage.setItem("orgAddress", JSON.stringify(data.address)); // Store full address as JSON
-      localStorage.setItem("GSTNumber", data.GSTIN); // Key contains spaces, use bracket notation
-      localStorage.setItem("orgWebsite", data.website);
-      localStorage.setItem("orgCategory", data.category);
-      localStorage.setItem("orgDescription", data.description);
-      localStorage.setItem("orgCurrency", data.currency);
-      localStorage.setItem("orgTerms", JSON.stringify(data.terms_conditions)); // Convert array to string
-      localStorage.setItem("invoicePrefix", data.invoicePrefix);
-
-        // ✅ Redirect to home page
+      if (response.data.statusCode === 200) {
+        Cookies.set("authenticated",true, { expires: 1 })
         navigate("/home");
       }
     } catch (error) {
-      console.error("Login error:", error); // ✅ Debugging log
-
-      // ❌ Handle error more effectively
-      if (error.response) {
-        setError(error.response.data.message || "Login failed!");
-      } else {
-        setError("Network error! Please try again.");
-      }
+      console.log(error)
+      setError(error.response?.data?.message || "Login failed!");
     }
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-blue-100">
-      <form onSubmit={handleLogin} className="bg-gray-50 p-6 shadow-md rounded-md">
-        <h2 className="text-2xl font-bold mb-4">Login</h2>
+    <div className="flex justify-center items-center min-h-screen bg-blue-100 px-4">
+      <form 
+        onSubmit={handleLogin} 
+        className="bg-white p-6 shadow-md rounded-md w-full max-w-sm"
+      >
+        <h2 className="text-2xl font-bold text-center mb-4">Login</h2>
 
-        {error && <p className="text-red-500 mb-2">{error}</p>} {/* Show error */}
+        {error && <p className="text-red-500 mb-2 text-center">{error}</p>}
 
         <input
           type="email"
-          name="email" // ✅ Helps browser remember input
+          name="email"
           placeholder="Email"
-          className="border p-2 mb-2 w-full"
+          className="border p-2 mb-2 w-full rounded"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(e) => {
+            setEmail(e.target.value);
+            setError(""); // Clear error when user starts typing
+          }}
           required
           autoComplete="email"
         />
 
         <input
           type="password"
-          name="password" // ✅ Helps browser save password
+          name="password"
           placeholder="Password"
-          className="border p-2 mb-2 w-full"
+          className="border p-2 mb-2 w-full rounded"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={(e) => {
+            setPassword(e.target.value);
+            setError(""); // Clear error when user starts typing
+          }}
           required
           autoComplete="current-password"
         />
 
         <button
-          className="bg-blue-500 text-white px-4 py-2 w-full"
-          type="submit"
-          onClick={() => console.log("Login button clicked")} // ✅ Debugging click event
+          className="bg-blue-500 text-white px-4 py-2 w-full rounded hover:bg-blue-600 transition"
+          type="submit" // Remove onClick handler, as the form's onSubmit will handle it
         >
           Login
         </button>
 
-        <p className="mt-2 text-sm">
-          Don't have an account? <a href="/signup" className="text-blue-600">Sign up</a>
+        <p className="mt-2 text-sm text-center">
+          Don't have an account? 
+          <button 
+            type="button"
+            onClick={() => setShowSignupModal(true)}
+            className="text-blue-600 ml-1 underline"
+          >
+            Sign up
+          </button>
         </p>
       </form>
+
+      {showSignupModal && <SignupModal onClose={() => setShowSignupModal(false)} />}
     </div>
   );
 };

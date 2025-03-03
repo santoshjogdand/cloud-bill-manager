@@ -1,7 +1,13 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { FiMenu, FiX } from "react-icons/fi"; // Hamburger & Close icons
-
+import homeIcon from "../../assets/home.svg"
+import salesIcon from "../../assets/sales.svg"
+import customersIcon from "../../assets/customer.svg"
+import inventoryIcon from "../../assets/inventoryIcon.png"
+import invoiceIcon from "../../assets/reports.svg"
+import aboutIcon from "../../assets/about.svg"
+import logoutIcon from "../../assets/logout.svg"
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false); // Sidebar is open by default
 
@@ -25,13 +31,13 @@ const Header = () => {
         <div className="p-4">
           <p className="mt-10 text-white text-xl font-semibold ml-4">CloudBill Manager</p>
           <ul className="mt-3 space-y-2">
-            <NavItem to="/home" icon="home.svg" label="Home" />
-            <NavItem to="/Invoice" icon="sales.svg" label="Invoice" />
-            <NavItem to="/Customers" icon="customer.svg" label="Customers" />
-            <NavItem to="/Inventory" icon="payments.svg" label="Inventory" />
-            <NavItem to="/Sales" icon="reports.svg" label="Sales" />
-            <NavItem to="/About" icon="about.svg" label="Account" />
-            <NavItem to="/Logout" icon="logout.png" label="Logout" />
+            <NavItem to="/home" icon={homeIcon} label="Home" />
+            <NavItem to="/Invoice" icon={invoiceIcon} label="Invoice" />
+            <NavItem to="/Customers" icon={customersIcon} label="Customers" />
+            <NavItem to="/Inventory" icon={inventoryIcon} label="Inventory" />
+            <NavItem to="/Sales" icon={salesIcon} label="Sales" />
+            <NavItem to="/About" icon={aboutIcon} label="Account" />
+            <NavItem to="/Logout" icon={logoutIcon} label="Logout" />
           </ul>
         </div>
       </div>
@@ -48,7 +54,7 @@ const Header = () => {
 const NavItem = ({ to, icon, label }) => (
   <Link to={to} className="block">
     <li className="flex items-center space-x-3 p-3 hover:bg-blue-800 rounded-lg transition duration-200 text-white">
-      <img src={`../src/assets/${icon}`} alt="" className="w-6 h-6" />
+      <img src={icon} alt="" className="w-6 h-6" />
       <span className="text-lg">{label}</span>
     </li>
   </Link>

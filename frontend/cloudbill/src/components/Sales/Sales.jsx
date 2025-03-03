@@ -119,15 +119,8 @@ const Sales = () => {
 
   // Memoized calculation for invoice details modal
   const calculateTaxAmount = useCallback((sale) => {
-    if (!sale?.line_items?.length) return '0.00';
-    
-    const preTaxTotal = sale.line_items.reduce((sum, item) => {
-      const price = parseFloat(item.total_price) || 0;
-      const taxRate = parseFloat(item.tax) || 0;
-      return sum + (price / (1 + taxRate/100));
-    }, 0);
-    
-    const taxAmount = parseFloat(sale.total_amount) - preTaxTotal;
+  
+    const taxAmount = sale.tax_amount;
     return taxAmount.toFixed(2);
   }, []);
 
@@ -141,14 +134,14 @@ const Sales = () => {
     <div className="flex flex-col min-h-screen bg-gray-100">
       <Header />
       <div className="container mx-auto p-4 w-full">
-        <div className="flex flex-col md:flex-row justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold mb-4 md:mb-0">Sales</h1>
+      <div className="text-center text-2xl font-bold mb-5">Sales Management</div>
+        <div className="flex flex-col md:flex-row justify-between items-center mb-6 ">
           <div className="w-full md:w-auto">
             <div className="relative mb-4 md:mb-0">
               <input
                 type="text"
                 placeholder="Search by customer, invoice or amount..."
-                className="w-full md:w-64 p-2 pr-10 border rounded"
+                className="w-full p-2 pr-10 border rounded"
                 value={filters.searchTerm}
                 onChange={(e) => handleFilterChange('searchTerm', e.target.value)}
               />
@@ -354,8 +347,8 @@ const Sales = () => {
                   <tr>
                     <th className="border px-3 py-2 text-left">Sr No.</th>
                     <th className="border px-3 py-2 text-left">Product Name</th>
+                    <th className="border px-3 py-2 text-right">Unit</th>
                     <th className="border px-3 py-2 text-right">QTY</th>
-                    <th className="border px-3 py-2 text-right">Nos</th>
                     <th className="border px-3 py-2 text-right">Tax (%)</th>
                     <th className="border px-3 py-2 text-right">Unit Price</th>
                     <th className="border px-3 py-2 text-right">Total Price</th>
@@ -367,8 +360,8 @@ const Sales = () => {
                       <tr key={index} className="hover:bg-gray-50">
                         <td className="border px-3 py-2">{item.sr_no}</td>
                         <td className="border px-3 py-2">{item.product_name}</td>
-                        <td className="border px-3 py-2 text-right">{item.QTY}</td>
-                        <td className="border px-3 py-2 text-right">{item.nos}</td>
+                        <td className="border px-3 py-2 text-right">{item.unit}</td>
+                        <td className="border px-3 py-2 text-right">{item.qty}</td>
                         <td className="border px-3 py-2 text-right">{item.tax}%</td>
                         <td className="border px-3 py-2 text-right">
                           ₹{(parseFloat(item.unit_price) || 0).toLocaleString()}

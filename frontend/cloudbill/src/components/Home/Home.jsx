@@ -1,6 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import Header from "../Header/Header";
+import invoiceIcon from "../../assets/invoice.png";
+import ratingIcon from "../../assets/rating.png";
+import profitIcon from "../../assets/profit.png";
+import inventoryIcon from "../../assets/inventory.png";
+import aboutIcon from "../../assets/about.png";
 
 const Home = () => {
   return (
@@ -15,7 +20,7 @@ const Home = () => {
             {/* Invoice */}
             <div>
               <Link to="/Invoice">
-                <img src="../src/assets/invoice.png" alt="bill" className="w-20 sm:w-24 mx-auto" />
+                <img src={invoiceIcon} alt="bill" className="w-20 sm:w-24 mx-auto" />
               </Link>
               <Link to="/Invoice">
                 <p className="mt-2 text-lg font-semibold">Invoice</p>
@@ -25,7 +30,7 @@ const Home = () => {
             {/* Customers */}
             <div>
               <Link to="/Customers">
-                <img src="../src/assets/rating.png" alt="user" className="w-20 sm:w-24 mx-auto" />
+                <img src={ratingIcon} alt="user" className="w-20 sm:w-24 mx-auto" />
               </Link>
               <Link to="/Customers">
                 <p className="mt-2 text-lg font-semibold">Customers</p>
@@ -35,7 +40,7 @@ const Home = () => {
             {/* Sales */}
             <div>
               <Link to="/Sales">
-                <img src="../src/assets/profit.png" alt="sales" className="w-20 sm:w-24 mx-auto" />
+                <img src={profitIcon} alt="sales" className="w-20 sm:w-24 mx-auto" />
               </Link>
               <Link to="/Sales">
                 <p className="mt-2 text-lg font-semibold">Sales</p>
@@ -45,7 +50,7 @@ const Home = () => {
             {/* Inventory */}
             <div>
               <Link to="/Inventory">
-                <img src="../src/assets/inventory.png" alt="inventory" className="w-20 sm:w-24 mx-auto" />
+                <img src={inventoryIcon} alt="inventory" className="w-20 sm:w-24 mx-auto" />
               </Link>
               <Link to="/Inventory">
                 <p className="mt-2 text-lg font-semibold">Inventory</p>
@@ -55,7 +60,7 @@ const Home = () => {
             {/* Account */}
             <div>
               <Link to="/About">
-                <img src="../src/assets/about.png" alt="information" className="w-20 sm:w-24 mx-auto" />
+                <img src={aboutIcon} alt="information" className="w-20 sm:w-24 mx-auto" />
               </Link>
               <Link to="/About">
                 <p className="mt-2 text-lg font-semibold">Account</p>

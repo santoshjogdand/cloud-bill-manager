@@ -7,11 +7,11 @@
         product_name:{
         type: String
         },
-        QTY: {
-            type: String
-        },
-        nos:{
+        qty: {
             type: Number
+        },
+        unit:{
+            type: String
         },
         tax:{
             type: Number

@@ -1,15 +1,16 @@
 import { useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { API } from "../../Api";
-import SignupModal from "../Signup/Signup"; // Adjusted import path
+import SignupModal from "../Signup/Signup";
+import ForgotPasswordModal from "./ForgotPasswordModal"; // New import
 import Cookies from "js-cookie";
-
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [showSignupModal, setShowSignupModal] = useState(false);
+  const [showForgotPasswordModal, setShowForgotPasswordModal] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
@@ -18,7 +19,7 @@ const Login = () => {
     try {
       const response = await API.post("login", { email, password });
       if (response.data.statusCode === 200) {
-        Cookies.set("authenticated",true, { expires: 1 })
+        Cookies.set("authenticated", true, { expires: 1 })
         navigate("/home");
       }
     } catch (error) {
@@ -45,7 +46,7 @@ const Login = () => {
           value={email}
           onChange={(e) => {
             setEmail(e.target.value);
-            setError(""); // Clear error when user starts typing
+            setError(""); 
           }}
           required
           autoComplete="email"
@@ -59,7 +60,7 @@ const Login = () => {
           value={password}
           onChange={(e) => {
             setPassword(e.target.value);
-            setError(""); // Clear error when user starts typing
+            setError(""); 
           }}
           required
           autoComplete="current-password"
@@ -67,24 +68,31 @@ const Login = () => {
 
         <button
           className="bg-blue-500 text-white px-4 py-2 w-full rounded hover:bg-blue-600 transition"
-          type="submit" // Remove onClick handler, as the form's onSubmit will handle it
+          type="submit"
         >
           Login
         </button>
 
-        <p className="mt-2 text-sm text-center">
-          Don't have an account? 
+        <div className="flex justify-between mt-2 text-sm">
+          <button 
+            type="button"
+            onClick={() => setShowForgotPasswordModal(true)}
+            className="text-blue-600 underline"
+          >
+            Forgot Password?
+          </button>
           <button 
             type="button"
             onClick={() => setShowSignupModal(true)}
-            className="text-blue-600 ml-1 underline"
+            className="text-blue-600 underline"
           >
             Sign up
           </button>
-        </p>
+        </div>
       </form>
 
       {showSignupModal && <SignupModal onClose={() => setShowSignupModal(false)} />}
+      {showForgotPasswordModal && <ForgotPasswordModal onClose={() => setShowForgotPasswordModal(false)} />}
     </div>
   );
 };

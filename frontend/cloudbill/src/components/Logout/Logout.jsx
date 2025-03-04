@@ -8,12 +8,13 @@ const Logout = () => {
   useEffect(() => {
     const logoutUser = async () => {
       try {
+        localStorage.removeItem("authenticated");
+        localStorage.clear()
         // 🔹 Send logout request to backend to clear JWT cookie
         await API.post("logout");
-
         // 🔹 Remove authentication status
         localStorage.removeItem("authenticated");
-
+        localStorage.clear()
         // 🔹 Redirect to login page
         navigate("/login");
       } catch (error) {

@@ -25,7 +25,7 @@ const router = createBrowserRouter([
   { path: "/inventory", element: <ProtectedRoute><Inventory /></ProtectedRoute> },
   { path: "/about", element: <ProtectedRoute><About /></ProtectedRoute> },
   { path: "/login", element: <Login /> },
-  { path: "/logout", element: <Logout /> }
+  { path: "/logout", element: <ProtectedRoute><Logout /></ProtectedRoute>}
 ]);
 
 createRoot(document.getElementById('root')).render(

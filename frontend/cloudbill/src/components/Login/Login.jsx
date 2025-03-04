@@ -2,8 +2,9 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { API } from "../../Api";
 import SignupModal from "../Signup/Signup";
-import ForgotPasswordModal from "./ForgotPasswordModal"; // New import
+import ForgotPasswordModal from "../ForgotPassword/ForgotPassword"; // New import
 import Cookies from "js-cookie";
+
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -18,10 +19,30 @@ const Login = () => {
 
     try {
       const response = await API.post("login", { email, password });
-      if (response.data.statusCode === 200) {
-        Cookies.set("authenticated", true, { expires: 1 })
-        navigate("/home");
-      }
+      console.log(response.data)
+if (response.data.statusCode === 200) {
+  // Store organization details in localStorage
+  localStorage.setItem("orgName", response.data.data.name || "");
+  localStorage.setItem("orgEmail", response.data.data.email || "");
+  
+  // For items that might be objects or arrays, use JSON.stringify
+  localStorage.setItem("orgPhone", JSON.stringify(response.data.data.phone || []));
+  localStorage.setItem("ownerName", response.data.data.ownername || "");
+  localStorage.setItem("orgAddress", JSON.stringify(response.data.data.address || {}));
+  
+  localStorage.setItem("GSTNumber", response.data.data.GSTIN || "");
+  localStorage.setItem("orgWebsite", response.data.data.website || "");
+  localStorage.setItem("orgCategory", response.data.data.category || "");
+  localStorage.setItem("orgDescription", response.data.data.description || "");
+  localStorage.setItem("orgCurrency", response.data.data.currency || "");
+  
+  // For terms, ensure it's stringified
+  localStorage.setItem("orgTerms", JSON.stringify(response.data.data.terms_conditions || []));
+  localStorage.setItem("invoicePrefix", response.data.data.invoicePrefix || "");
+
+  // Navigate to home page
+  navigate("/home");
+}
     } catch (error) {
       console.log(error)
       setError(error.response?.data?.message || "Login failed!");

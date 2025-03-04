@@ -7,14 +7,12 @@ import nodemailer from "nodemailer"
 import dotenv from "dotenv";
 dotenv.config();
 
-
-
 const options = {
     httpOnly: true,
     secure: true,
-    sameSite: "none" 
-}
-
+    sameSite: "none",
+    maxAge: 24 * 60 * 60 * 1000 // 1 day in milliseconds
+};
 
 const register = asyncHandler(async (req, res, next) => {
     const { 
@@ -96,10 +94,16 @@ const login = asyncHandler(async (req,res,next)=>{
     }
     const loggedInOrg = await Organization.findById(organization._id).select("-createdAt -password -updatedAt -__v ")
     const accessToken = await loggedInOrg.generateAccessToken()
-    return res.status(200)
-    .clearCookie("accessToken")
-    .cookie("accessToken",accessToken,options)
-    .json(new ApiResponse(200,loggedInOrg,"Organization logged in successfully!!"))
+    return res.status(200).clearCookie("accessToken").clearCookie("authenticated")
+    .cookie("accessToken", accessToken, options)
+    .cookie("authenticated", true, {
+        httpOnly: false,
+        secure: true,
+        sameSite: "none",
+        maxAge: 24 * 60 * 60 * 1000 // 1 day in milliseconds
+    })
+    .json(new ApiResponse(200, loggedInOrg, "Organization logged in successfully!!"));
+
     
 })
 
@@ -191,8 +195,8 @@ const sendOTP = asyncHandler(async (req, res) => {
     org.otp = otp;
     org.otpExpires = Date.now() + 5 * 60 * 1000; // OTP expires in 5 mins
     await org.save();
-
-    // ✉️ Send OTP via Email
+    console.log("OTP: SEND::", otp)
+    // ✉️ Send OTP via Email    
     await transporter.sendMail({
         from: `"CloudBill Manager" <${process.env.EMAIL_USER}>`,
         to: email,
@@ -218,7 +222,7 @@ const sendOTP = asyncHandler(async (req, res) => {
 
     const otpOptions = {
         httpOnly: true,    // Prevent JavaScript access
-        secure: false,      // http can also work
+        secure: true,      // http can also work
         sameSite: "none",// allows any site
         maxAge: 5 * 60 * 1000 // 5 minutes
     }
@@ -281,8 +285,9 @@ const getPasswordChangeTemplate = (name,ip) =>{
 const resetPassword = asyncHandler(async (req, res) => {
     const ip = req.headers['x-forwarded-for']?.split(',')[0] || req.socket.remoteAddress;
     const { newPassword } = req.body;
+    console.log(req.cookies)
     const token  = req.cookies.otpAuthToken
-
+    console.log(token)
         // 🔑 Verify JWT Token
         const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
         const org = await Organization.findOne({ email: decoded.email });

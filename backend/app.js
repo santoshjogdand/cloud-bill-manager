@@ -18,10 +18,7 @@ import errorHandler from "./middlewares/errorHandler.js"
 
 app.use(cookieParser());
 app.use(cors({
-    origin: (origin, callback) => {
-        if (!origin) return callback(null, true); // Allow requests from Postman or mobile apps
-        return callback(null, origin); // Allow all origins dynamically
-    },
+    origin: "https://cloudbillmanager.netlify.app",
     credentials: true, // Allow cookies
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"]

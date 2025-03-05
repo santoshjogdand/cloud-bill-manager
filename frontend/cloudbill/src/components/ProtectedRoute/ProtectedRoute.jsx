@@ -3,7 +3,7 @@ import Cookies from "js-cookie"
 
 const ProtectedRoute = ({ children }) => {
     const isAuthenticated= Cookies.get("authenticated")
-  // const isAuthenticated = localStorage.getItem("authenticated") === "true";
+    console.log("Is authenticated: ", isAuthenticated)
   return isAuthenticated ? children : <Navigate to="/login" replace />;
 };
 

@@ -94,7 +94,7 @@ const login = asyncHandler(async (req,res,next)=>{
     }
     const loggedInOrg = await Organization.findById(organization._id).select("-createdAt -password -updatedAt -__v ")
     const accessToken = await loggedInOrg.generateAccessToken()
-    return res.status(200).clearCookie("accessToken").clearCookie("authenticated")
+    return res.status(200)
     .cookie("accessToken", accessToken, options)
     .cookie("authenticated", true, {
         httpOnly: false,

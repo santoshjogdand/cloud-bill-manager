@@ -19,8 +19,10 @@ const Login = () => {
 
     try {
       const response = await API.post("login", { email, password });
+      
       console.log(response.data)
 if (response.data.statusCode === 200) {
+  Cookies.set("authenticated",true)
   // Store organization details in localStorage
   localStorage.setItem("orgName", response.data.data.name || "");
   localStorage.setItem("orgEmail", response.data.data.email || "");

@@ -22,7 +22,7 @@ const Login = () => {
       
       console.log(response.data)
 if (response.data.statusCode === 200) {
-  Cookies.set("authenticated",true)
+  Cookies.set("authenticated",true, { expires: 1 })
   // Store organization details in localStorage
   localStorage.setItem("orgName", response.data.data.name || "");
   localStorage.setItem("orgEmail", response.data.data.email || "");

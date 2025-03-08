@@ -158,6 +158,10 @@ const organizationSchema = new Schema(
             type: Date,
             default: Date.now
         },
+        isVerified:{
+            type: Boolean,
+            default: false
+        },
         updatedAt: {
             type: Date,
             default: Date.now

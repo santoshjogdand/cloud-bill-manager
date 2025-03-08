@@ -4,6 +4,7 @@ import { API } from '../../Api';
 import { AlertCircle } from "lucide-react";
 import { Navigate, useNavigate } from 'react-router-dom';
 import deleteIcon from "../../assets/delete.svg";
+import crossIcon from "../../assets/cross.png";
 import html2pdf from 'html2pdf.js'; // Import html2pdf
 
 const orgName = localStorage.getItem("orgName");
@@ -346,7 +347,7 @@ const Invoice = () => {
         <div className='left w-full lg:w-[60%] xl:w-[65%] h-full p-2 sm:p-4'>
           <div className='customer bg-white p-3 rounded shadow-md'>
             <div className='title flex flex-col sm:flex-row justify-between mb-4 gap-2'>
-              <div className='text-lg font-semibold'>CUSTOMER DETAILS</div>
+              <div className='text-lg font-semibold ml-10'>CUSTOMER DETAILS</div>
               <div className='customer_search relative w-full sm:w-auto'>
                 <input
                   type="text"
@@ -453,12 +454,12 @@ const Invoice = () => {
                   </div>
                 )}
               </div>
-              <button
+              {/* <button
                 onClick={handleAddPlate}
                 className='bg-blue-500 text-white font-medium py-2 px-4 rounded hover:bg-blue-600 focus:outline-none'
               >
                 Add
-              </button>
+              </button> */}
             </div>
             <div className='border-t border-gray-400 my-3'></div>
             <div className='product_list overflow-x-auto'>
@@ -477,17 +478,19 @@ const Invoice = () => {
                 <div key={index} className="white_plate flex flex-wrap sm:flex-nowrap justify-between items-center mt-2 bg-white p-2 rounded shadow-md gap-1">
                   <input
                     type="text"
+                    disabled="true"
                     placeholder="Product Name"
                     value={plate.productName}
                     onChange={(e) => handlePlateChange(index, 'productName', e.target.value)}
-                    className='border border-gray-300 p-1 sm:p-2 rounded w-full sm:w-1/4 text-xs sm:text-sm'
+                    className='disabled:bg-gray-200 border border-gray-300 p-1 sm:p-2 rounded w-full sm:w-1/4 text-xs sm:text-sm'
                   />
                   <input
                     type="number"
                     placeholder="Rate"
+                    disabled="true"
                     value={plate.unit_price}
                     onChange={(e) => handlePlateChange(index, 'unit_price', e.target.value)}
-                    className='border border-gray-300 p-1 sm:p-2 rounded w-1/2 sm:w-1/6 text-xs sm:text-sm'
+                    className='disabled:bg-gray-200 border border-gray-300 p-1 sm:p-2 rounded w-1/2 sm:w-1/6 text-xs sm:text-sm'
                   />
                   <select
                     value={plate.unit}
@@ -507,13 +510,14 @@ const Invoice = () => {
                   <input
                     type="number"
                     placeholder="Tax %"
+                    disabled="true"
                     value={plate.tax}
                     onChange={(e) => handlePlateChange(index, 'tax', e.target.value)}
-                    className='border border-gray-300 p-1 sm:p-2 rounded w-1/3 sm:w-1/6 text-xs sm:text-sm'
+                    className='disabled:bg-gray-200 border border-gray-300 p-1 sm:p-2 rounded w-1/3 sm:w-1/6 text-xs sm:text-sm'
                   />
                   <div className='w-1/3 sm:w-1/6 text-center font-bold text-xs sm:text-sm'>{(plate.unit_price * plate.qty).toFixed(2)}</div>
                   <div onClick={() => handleRemovePlate(index)} className='cursor-pointer flex justify-center w-6'>
-                    <img src="../src/assets/cross.png" alt="Close" className="h-4 sm:h-5" />
+                    <img src={crossIcon} alt="Close" className="h-4 sm:h-5" />
                   </div>
                 </div>
               ))}
@@ -534,10 +538,10 @@ const Invoice = () => {
                 <div>Taxes</div>
                 <div>{taxTotal.toFixed(2)}</div>
               </div>
-              <div className='Discounts flex justify-between text-sm'>
+              {/* <div className='Discounts flex justify-between text-sm'>
                 <div>Discount</div>
                 <div>{discount.toFixed(2)}</div>
-              </div>
+              </div> */}
             </div>
           </div>
 
@@ -570,7 +574,7 @@ const Invoice = () => {
                 WALLET
               </div>
             </div>
-            <div className='recived_payment flex justify-center'>
+            {/* <div className='recived_payment flex justify-center'>
               <input
                 type="number"
                 placeholder="Received Amount"
@@ -578,19 +582,19 @@ const Invoice = () => {
                 onChange={(e) => setReceivedAmount(parseFloat(e.target.value) || 0)}
                 className="pl-5 w-full max-w-xs p-2 border border-gray-300 rounded outline-none text-sm text-gray-700 focus:ring-1 focus:ring-gray-400"
               />
-            </div>
+            </div> */}
           </div>
 
           <div className='border-t border-gray-300 my-5'></div>
 
           <div className='amount mt-5 sm:mt-10'>
-            <div className='flex flex-col sm:flex-row justify-between gap-4 sm:gap-0 mt-5'>
-              <div className="bg-blue-500 text-white text-center shadow-md p-2 w-full sm:w-5/12 rounded">
+            <div className='flex flex-col sm:flex-row justify-center gap-4 sm:gap-0 mt-5'>
+              {/* <div className="bg-blue-500 text-white text-center shadow-md p-2 w-full sm:w-5/12 rounded">
                 <div className="text-sm">Collected Amount</div>
                 <div className="text-sm font-bold mt-1">{receivedAmount}</div>
-              </div>
+              </div> */}
               <div className="bg-blue-500 text-white text-center shadow-md p-2 w-full sm:w-5/12 rounded">
-                <div className="text-sm">Due Amount</div>
+                <div className="text-sm">Total Amount</div>
                 <div className="text-sm font-bold mt-1">{dueAmount.toFixed(2)}</div>
               </div>
             </div>
@@ -612,14 +616,14 @@ const Invoice = () => {
         </div>
       </div>}
 
-      // Fixed invoice template section
+{/*/ Fixed invoice template section
 
 // The main issues in the current template:
 // 1. Too much bold text
 // 2. Poor spacing and alignment
 // 3. Potential overflow issues
 
-// Replace the existing hidden invoice template section with this improved version:
+// Replace the existing hidden invoice template section with this improved version:*/}
 
 {/* Hidden Invoice Template for PDF Generation */}
 <div id="invoice-template" style={{ display: 'none', width: '190mm', height:'100%', margin: '0', padding: '0', fontFamily: 'Arial, sans-serif', fontSize: '10pt' }}>
@@ -682,7 +686,7 @@ const Invoice = () => {
       <tr style={{alignItems: 'center', textAlign:'center'}} >
         <th style={{ border: '1px solid #ccc', paddingBottom: '6px', backgroundColor: '#f2f2f2', width: '10%', fontWeight: 'normal' }}>Sr No</th>
         <th style={{ border: '1px solid #ccc', paddingBottom: '6px', backgroundColor: '#f2f2f2', width: '20%', fontWeight: 'normal' }}>Product Name</th>
-        <th style={{ border: '1px solid #ccc', paddingBottom: '6px', backgroundColor: '#f2f2f2', width: '15%', fontWeight: 'normal' }}>Category</th>
+        <th style={{ border: '1px solid #ccc', paddingBottom: '6px', backgroundColor: '#f2f2f2', width: '15%', fontWeight: 'normal' }}>Unit</th>
         <th style={{ border: '1px solid #ccc', paddingBottom: '6px', backgroundColor: '#f2f2f2', width: '10%', fontWeight: 'normal' }}>QTY</th>
         <th style={{ border: '1px solid #ccc', paddingBottom: '6px', backgroundColor: '#f2f2f2', width: '10%', fontWeight: 'normal' }}>Rate</th>
         <th style={{ border: '1px solid #ccc', paddingBottom: '6px', backgroundColor: '#f2f2f2', width: '10%', fontWeight: 'normal' }}>GST%</th>
@@ -692,7 +696,7 @@ const Invoice = () => {
         <tr key={index} style={{textAlign:'center', alignItems:'center',width:'100%',height:'100%'}}>
           <td style={{ textAlign: 'center', border: '1px solid #ccc', paddingBottom: '5px' }}>{index + 1}</td>
           <td style={{ textAlign: 'center', border: '1px solid #ccc', paddingBottom: '5px' }}>{plate.productName}</td>
-          <td style={{ textAlign: 'center', border: '1px solid #ccc', paddingBottom: '5px' }}>{plate.category}</td>
+          <td style={{ textAlign: 'center', border: '1px solid #ccc', paddingBottom: '5px' }}>{plate.unit}</td>
           <td style={{ textAlign: 'center', border: '1px solid #ccc', paddingBottom: '5px' }}>{plate.qty}</td>
           <td style={{ textAlign: 'center', border: '1px solid #ccc', paddingBottom: '5px' }}>{plate.unit_price}</td>
           <td style={{ textAlign: 'center', border: '1px solid #ccc', paddingBottom: '5px' }}>{plate.tax}</td>

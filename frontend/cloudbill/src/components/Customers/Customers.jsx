@@ -278,7 +278,7 @@ const Customers = () => {
               />
             )}
           </div>
-          <button
+          {/* <button
             className="bg-blue-600 text-white px-4 py-2 rounded flex items-center hover:bg-blue-700 transition"
             onClick={() => setIsFilterExpanded(!isFilterExpanded)}
             aria-expanded={isFilterExpanded}
@@ -294,7 +294,7 @@ const Customers = () => {
             >
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
             </svg>
-          </button>
+          </button> */}
           <button
             className="bg-blue-600 text-white px-4 py-2 rounded flex items-center hover:bg-blue-700 transition"
             onClick={addCustomerHandler}

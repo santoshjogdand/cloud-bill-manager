@@ -12,7 +12,7 @@ const initialProductState = {
   conversion_rate: 0.00,
   alternate_unit: "",
   tax_rate: 0.00,
-  tax_type: "",
+  tax_type: "GST",
   supplier: "",
   batch_number: "",
   manufacturer: "",
@@ -406,7 +406,9 @@ const Inventory = () => {
                       <input 
                         type="text" 
                         name="tax_type" 
-                        value={productForm.tax_type} 
+                        // value={productForm.tax_type}
+                        value="GST" 
+                        disabled="true"
                         onChange={handleInputChange} 
                         className={`p-2 border rounded w-full ${formErrors.tax_type ? 'border-red-500' : ''}`}
                       />
@@ -556,7 +558,7 @@ const Inventory = () => {
                       />
                     </div>
                     
-                    <div>
+                    {/* <div>
                       <label className="block text-sm font-medium text-gray-700">Discount (%)</label>
                       <input 
                         type="number" 
@@ -568,7 +570,7 @@ const Inventory = () => {
                         step="0.01"
                         className="p-2 border rounded w-full"
                       />
-                    </div>
+                    </div> */}
                   </div>
                 </div>
                 

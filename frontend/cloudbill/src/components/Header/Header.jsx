@@ -14,7 +14,7 @@ const Header = () => {
   return (
     <>
       {/* Top Fixed Header Bar */}
-      <div className="fixed top-4 left-0 z-50 flex items-center duration-300">
+      <div className="fixed top-5 left-0 z-50 flex items-center duration-300">
         <button
           className="ml-4 bg-blue-950 text-white p-2 rounded-lg"
           onClick={() => setIsOpen(!isOpen)}

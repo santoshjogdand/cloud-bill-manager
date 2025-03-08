@@ -147,16 +147,16 @@ const createInvoice = asyncHandler(async (req, res) => {
 
 const removeInvoice = asyncHandler(async (req, res) => {
     const organization = req.org._id;
-    const { invoice_id } = req.params;
-
+    const { invoice_number } = req.params;
+    console.log(invoice_number)
     // Check if invoice exists
-    const invoice = await Invoice.findOne({ _id: invoice_id, organization });
+    const invoice = await Invoice.findOne({ invoice_number: invoice_number, organization });
     if (!invoice) {
         throw new ApiError(404, "Invoice not found!");
     }
 
     // Remove invoice
-    await Invoice.deleteOne({ _id: invoice_id, organization });
+    await Invoice.deleteOne({ invoice_number: invoice_number, organization });
 
     res.status(200).json(new ApiResponse(200, {}, "Invoice removed successfully!"));
 });

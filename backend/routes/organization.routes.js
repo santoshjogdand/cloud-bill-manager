@@ -1,6 +1,8 @@
 import { Router } from "express";
 import { 
-    register, 
+    initiateRegistration,
+    verifyRegistrationOTP,
+    resendRegistrationOTP,
     login, 
     logout, 
     sendOTP, 
@@ -37,10 +39,19 @@ import verifyJwt from "../middlewares/auth.middleware.js";
 
 const router = Router();
 
-// Organization authentication routes
-router.route("/register").post(register);
+// Organization authentication routes with OTP verification for registration
+router.route("/register/initiate").post(initiateRegistration);
+router.route("/register/verify").post(verifyRegistrationOTP);
+router.route("/register/resend-otp").post(resendRegistrationOTP);
+
+// Legacy route for backward compatibility (optional - can be removed if not needed)
+router.route("/register").post(initiateRegistration);
+
+// Other authentication routes
 router.route("/login").post(login);
 router.route("/logout").post(logout);
+
+// Password reset routes
 router.route("/sendOTP").post(sendOTP);
 router.route("/verifyOTP").post(verifyOTP);
 router.route("/resetPassword").post(resetPassword);
@@ -76,6 +87,6 @@ router.route("/getInvoices")
     .get(verifyJwt, getAllInvoice)     // Get all invoices
     .post(verifyJwt, getInvoice);       // Get a specific invoice
 
-router.route("/removeinvoice/:invoice_id").delete(verifyJwt, removeInvoice);
+router.route("/removeinvoice/:invoice_number").delete(verifyJwt, removeInvoice);
 
 export default router;

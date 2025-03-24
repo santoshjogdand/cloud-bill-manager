@@ -53,7 +53,7 @@ cloud-bill-manager/
 - **Backend**: Node.js, Express.js, MongoDB, Mongoose
 - **Frontend**: React.js
 - **Authentication**: JSON Web Tokens (JWT)
-- **Deployment**: AWS (backend and MongoDB Atlas)
+- **Deployment**: BACKEND RENDER and FRONTEND Netlify (DB MongoDB Atlas)
 
 ## **Getting Started**
 

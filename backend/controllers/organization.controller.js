@@ -300,9 +300,8 @@ const login = asyncHandler(async (req, res, next) => {
     }
     const loggedInOrg = await Organization.findById(organization._id).select("-createdAt -password -updatedAt -__v ")
     const accessToken = await loggedInOrg.generateAccessToken()
-    return res.status(200).clearCookie("accessToken",options)
-        .clearCookie("authenticated",options)
-        .cookie("authenticated",true, options)
+    return res.status(200).clearCookie("accessToken")
+        .clearCookie("authenticated")
         .cookie("accessToken", accessToken, options)
         .json(new ApiResponse(200, loggedInOrg, "Organization logged in successfully!!"));
 });

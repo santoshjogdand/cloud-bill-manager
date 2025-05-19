@@ -10,8 +10,10 @@ const Logout = () => {
       try {
         localStorage.removeItem("authenticated");
         localStorage.clear()
+        Cookies.remove("authenticated")
         // 🔹 Send logout request to backend to clear JWT cookie
         await API.post("logout");
+        Cookies.remove("authenticated")
         // 🔹 Remove authentication status
         localStorage.removeItem("authenticated");
         localStorage.clear()

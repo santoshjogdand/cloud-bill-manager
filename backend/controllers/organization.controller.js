@@ -302,6 +302,7 @@ const login = asyncHandler(async (req, res, next) => {
     const accessToken = await loggedInOrg.generateAccessToken()
     return res.status(200).clearCookie("accessToken")
         .clearCookie("authenticated")
+        .cookie("authenticated",true, options)
         .cookie("accessToken", accessToken, options)
         .json(new ApiResponse(200, loggedInOrg, "Organization logged in successfully!!"));
 });

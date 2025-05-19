@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { API } from "../../Api";
+import Cookies from 'js-cookie';
 
 const Logout = () => {
   const navigate = useNavigate();
@@ -14,6 +15,7 @@ const Logout = () => {
         // 🔹 Send logout request to backend to clear JWT cookie
         await API.post("logout");
         Cookies.remove("authenticated")
+        
         // 🔹 Remove authentication status
         localStorage.removeItem("authenticated");
         localStorage.clear()

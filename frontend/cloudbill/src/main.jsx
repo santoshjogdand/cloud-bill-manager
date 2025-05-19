@@ -16,7 +16,9 @@ import NavigateToLogin from './components/NavigateToLogin/NavigateToLogin.jsx';
 import Logout from './components/Logout/Logout.jsx';
 
 const router = createBrowserRouter([
-  { path: "/", element: <Login />  }, // Only logged-in users can access Home
+  { 
+    path: "/", element: <ProtectedRoute><Home /></ProtectedRoute> 
+  }, // Only logged-in users can access Home
   { path: "/home", element: <ProtectedRoute><Home /></ProtectedRoute> }, // Only logged-in users can access Home
   { path: "/customers", element: <ProtectedRoute><Customers /></ProtectedRoute> },
   { path: "/payments", element: <ProtectedRoute><Payments /></ProtectedRoute> },

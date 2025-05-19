@@ -313,7 +313,7 @@ const logout = asyncHandler(async (req, res, next) => {
         process.env.ACCESS_TOKEN_SECRET
     )
     const org = await Organization.findById(decodedToken._id).select("-password")
-    return res.status(200).clearCookie("accessToken").json(new ApiResponse(200, { loggedOutBy: org.name }, "Organization logged out!"))
+    return res.status(200).clearCookie("authenticated").clearCookie("accessToken").json(new ApiResponse(200, { loggedOutBy: org.name }, "Organization logged out!"))
 });
 
 const getOtpEmailTemplate = (otp) => {
